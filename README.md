@@ -1,9 +1,5 @@
 # iqtf-platform
 Intelligent Quantitative Trading Framework Platform
-# IQTF Platform 🚀
-
-Intelligent Quantitative Trading Framework Platform
-
 ## Features
 
 - 📊 **Monorepo** with pnpm + Turborepo
