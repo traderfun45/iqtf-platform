@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQTF Platform - Intelligent Trading Framework</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 80px; margin-bottom: 20px; }
+        h1 { font-size: 3em; margin-bottom: 10px; background: linear-gradient(90deg, #4fc3f7, #81c784); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.2em; color: #aaa; margin-bottom: 30px; }
+        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; text-align: left; }
+        .feature { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid #4fc3f7; }
+        .feature span { font-size: 1.5em; margin-right: 10px; }
+        .status { display: inline-block; padding: 8px 20px; background: #4caf50; border-radius: 20px; font-size: 0.9em; margin: 20px 0; }
+        .btn { display: inline-block; padding: 12px 30px; background: #4fc3f7; color: #000; border-radius: 30px; text-decoration: none; font-weight: bold; margin: 10px; transition: 0.3s; }
+        .btn:hover { transform: scale(1.05); background: #81d4fa; }
+        .btn-github { background: #333; color: #fff; }
+        .btn-github:hover { background: #555; }
+        .footer { margin-top: 30px; font-size: 0.8em; color: #666; }
+        @media (max-width: 600px) { .features { grid-template-columns: 1fr; } h1 { font-size: 2em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📊</div>
+        <h1>IQTF Platform</h1>
+        <p class="subtitle">Intelligent Quantitative Trading Framework</p>
+        <div class="status">🟢 System Online</div>
+        
+        <div class="features">
+            <div class="feature"><span>📦</span> Monorepo with pnpm + Turborepo</div>
+            <div class="feature"><span>🚀</span> REST API with Fastify + Prisma</div>
+            <div class="feature"><span>🔌</span> WebSocket for real-time data</div>
+            <div class="feature"><span>📈</span> Quant Engine for technical analysis</div>
+            <div class="feature"><span>🤖</span> AI Engine for predictions</div>
+            <div class="feature"><span>🐳</span> Docker for development</div>
+        </div>
+        
+        <div>
+            <a href="https://github.com/traderfun45/iqtf-platform" class="btn btn-github">🔗 View on GitHub</a>
+            <a href="#" class="btn">📖 Documentation</a>
+        </div>
+        
+        <div class="footer">© 2026 IQTF Platform • Built with ❤️</div>
+    </div>
+</body>
+</html>
