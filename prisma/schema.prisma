@@ -7,20 +7,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ========================================
+// User Model (อัปเดต)
+// ========================================
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  role          Role      @default(USER)
+  isVerified    Boolean   @default(false)
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  trades   Trade[]
-  alerts   Alert[]
-  strategies Strategy[]
+  // Relationships
+  trades        Trade[]
+  alerts        Alert[]
+  strategies    Strategy[]
+  sessions      Session[]
+  passwordResets PasswordReset[]
+
+  @@map("users")
 }
 
+// ========================================
+// Session Model (สำหรับ Refresh Token)
+// ========================================
+model Session {
+  id            String    @id @default(cuid())
+  userId        String
+  refreshToken  String    @unique
+  userAgent     String?
+  ipAddress     String?
+  expiresAt     DateTime
+  revoked       Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ========================================
+// Password Reset Model
+// ========================================
+model PasswordReset {
+  id            String    @id @default(cuid())
+  userId        String
+  token         String    @unique
+  expiresAt     DateTime
+  used          Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_resets")
+}
+
+// ========================================
+// Existing Models
+// ========================================
 model Trade {
   id        String   @id @default(cuid())
   userId    String
@@ -32,7 +81,9 @@ model Trade {
   createdAt DateTime   @default(now())
   closedAt  DateTime?
 
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("trades")
 }
 
 model Strategy {
@@ -45,7 +96,9 @@ model Strategy {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@map("strategies")
 }
 
 model Alert {
@@ -57,9 +110,14 @@ model Alert {
   triggered Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("alerts")
 }
 
+// ========================================
+// Enums
+// ========================================
 enum Role {
   USER
   ADMIN
