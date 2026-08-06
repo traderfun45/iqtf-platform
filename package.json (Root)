@@ -1,0 +1,20 @@
+{
+  "name": "iqtf-platform",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "turbo clean && rm -rf node_modules",
+    "db:push": "pnpm -F api prisma db push",
+    "db:studio": "pnpm -F api prisma studio"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}
