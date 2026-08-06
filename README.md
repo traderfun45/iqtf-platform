@@ -1,3 +1,4 @@
+[![CI](https://github.com/traderfun45/iqtf-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/traderfun45/iqtf-platform/actions/workflows/ci.yml)
 # iqtf-platform
 Intelligent Quantitative Trading Framework Platform
 ## Features
