@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trades   Trade[]
+  alerts   Alert[]
+  strategies Strategy[]
+}
+
+model Trade {
+  id        String   @id @default(cuid())
+  userId    String
+  symbol    String
+  side      Side
+  amount    Float
+  price     Float
+  status    TradeStatus @default(OPEN)
+  createdAt DateTime   @default(now())
+  closedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Strategy {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  config      Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  symbol    String
+  condition String
+  isActive  Boolean  @default(true)
+  triggered Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Side {
+  BUY
+  SELL
+}
+
+enum TradeStatus {
+  OPEN
+  CLOSED
+  CANCELLED
+}
