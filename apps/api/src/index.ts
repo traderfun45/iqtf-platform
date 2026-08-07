@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import fastifyJwt from 'fastify-jwt'
 import fastifyCors from '@fastify/cors'
-import fastifyRateLimit from 'fastify-rate-limit'
+import fastifyHelmet from '@fastify/helmet' 
 import { PrismaClient } from '@prisma/client'
 import { WebSocketManager } from './websocket'
 import { authRoutes } from './routes/auth.routes'
