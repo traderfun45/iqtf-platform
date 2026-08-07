@@ -173,6 +173,88 @@ Authorization: Bearer {{accessToken}}
 GET {{baseUrl}}/trading/history
 Authorization: Bearer {{accessToken}}
 
+### ========================================
+### STRATEGY API TESTS (เพิ่มใหม่)
+### ========================================
+
+### 1. ดู Strategy Templates
+GET {{baseUrl}}/strategies/templates
+Authorization: Bearer {{accessToken}}
+
+### 2. สร้างกลยุทธ์ (MA Crossover)
+POST {{baseUrl}}/strategies
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "My MA Crossover Strategy",
+  "description": "Buy when 10MA crosses above 30MA",
+  "type": "MA_CROSSOVER",
+  "config": {
+    "fastMA": 10,
+    "slowMA": 30,
+    "symbol": "BTCUSDT",
+    "quantity": 0.001
+  }
+}
+
+### 3. สร้างกลยุทธ์ (RSI)
+POST {{baseUrl}}/strategies
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "My RSI Strategy",
+  "description": "Buy when RSI < 30, Sell when RSI > 70",
+  "type": "RSI_OVERSOLD",
+  "config": {
+    "period": 14,
+    "oversold": 30,
+    "overbought": 70,
+    "symbol": "ETHUSDT",
+    "quantity": 0.1
+  }
+}
+
+### 4. ดูกลยุทธ์ทั้งหมด
+GET {{baseUrl}}/strategies
+Authorization: Bearer {{accessToken}}
+
+### 5. ดูกลยุทธ์เฉพาะที่ Active
+GET {{baseUrl}}/strategies?isActive=true
+Authorization: Bearer {{accessToken}}
+
+### 6. ดูกลยุทธ์เดียว (เปลี่ยน YOUR_STRATEGY_ID)
+GET {{baseUrl}}/strategies/YOUR_STRATEGY_ID
+Authorization: Bearer {{accessToken}}
+
+### 7. เปิด/ปิดกลยุทธ์ (เปลี่ยน YOUR_STRATEGY_ID)
+POST {{baseUrl}}/strategies/YOUR_STRATEGY_ID/toggle
+Authorization: Bearer {{accessToken}}
+
+### 8. เรียกใช้กลยุทธ์ (เปลี่ยน YOUR_STRATEGY_ID)
+POST {{baseUrl}}/strategies/YOUR_STRATEGY_ID/run
+Authorization: Bearer {{accessToken}}
+
+### 9. ดู Logs ของกลยุทธ์ (เปลี่ยน YOUR_STRATEGY_ID)
+GET {{baseUrl}}/strategies/YOUR_STRATEGY_ID/logs
+Authorization: Bearer {{accessToken}}
+
+### 10. อัปเดตกลยุทธ์ (เปลี่ยน YOUR_STRATEGY_ID)
+PUT {{baseUrl}}/strategies/YOUR_STRATEGY_ID
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Updated Strategy Name",
+  "description": "Updated description",
+  "isActive": true
+}
+
+### 11. ลบกลยุทธ์ (เปลี่ยน YOUR_STRATEGY_ID)
+DELETE {{baseUrl}}/strategies/YOUR_STRATEGY_ID
+Authorization: Bearer {{accessToken}}
+
 ### 9. ดูประวัติการซื้อขายเฉพาะ BTC
 GET {{baseUrl}}/trading/history?symbol=BTCUSDT
 Authorization: Bearer {{accessToken}}
