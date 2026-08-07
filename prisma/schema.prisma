@@ -224,3 +224,65 @@ enum TradeStatus {
   OPEN
   CLOSED
 }
+
+// ========================================
+// Strategy Model (อัปเดต)
+// ========================================
+model Strategy {
+  id            String    @id @default(cuid())
+  userId        String
+  name          String
+  description   String?
+  type          StrategyType @default(CUSTOM)
+  isActive      Boolean   @default(true)
+  config        Json      // เก็บเงื่อนไขทั้งหมด
+  status        StrategyStatus @default(DRAFT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastRunAt     DateTime?
+  totalTrades   Int       @default(0)
+  winRate       Float     @default(0.0)
+  totalPnL      Float     @default(0.0)
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  strategyLogs  StrategyLog[]
+
+  @@map("strategies")
+}
+
+// ========================================
+// Strategy Log (บันทึกการทำงาน)
+// ========================================
+model StrategyLog {
+  id            String    @id @default(cuid())
+  strategyId    String
+  symbol        String
+  action        String    // BUY, SELL, HOLD
+  price         Float
+  quantity      Float?
+  reason        String?
+  timestamp     DateTime  @default(now())
+
+  strategy      Strategy  @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+
+  @@index([strategyId, timestamp])
+  @@map("strategy_logs")
+}
+
+// ========================================
+// Enums (เพิ่ม)
+// ========================================
+enum StrategyType {
+  MA_CROSSOVER      // Moving Average Crossover
+  RSI_OVERSOLD      // RSI Oversold/Overbought
+  MACD_SIGNAL       // MACD Signal
+  BOLLINGER_BANDS   // Bollinger Bands
+  CUSTOM            // ผู้ใช้กำหนดเอง
+}
+
+enum StrategyStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  STOPPED
+}
