@@ -1,0 +1,113 @@
+### ========================================
+### IQTF Platform - API Test File
+### ใช้สำหรับทดสอบ Authentication
+### ========================================
+
+### ตั้งค่า Base URL (เปลี่ยนตาม environment ของคุณ)
+@baseUrl = http://localhost:3000/api
+
+### ========================================
+### 1. ลงทะเบียน (Register)
+### ========================================
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "name": "Test User"
+}
+
+### ========================================
+### 2. เข้าสู่ระบบ (Login)
+### ========================================
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### ⚠️ หลังจาก Login สำเร็จ:
+### - Copy accessToken และ refreshToken จาก response
+### - ไปวางที่ด้านล่าง
+
+### ========================================
+### 3. ดูโปรไฟล์ (Get Profile) - ต้องมี Token
+### ========================================
+### เปลี่ยน YOUR_ACCESS_TOKEN เป็น Token ที่ได้จาก Login
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+
+### ========================================
+### 4. อัปเดตโปรไฟล์ (Update Profile)
+### ========================================
+PUT {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "ชื่อใหม่ที่ต้องการเปลี่ยน"
+}
+
+### ========================================
+### 5. เปลี่ยนรหัสผ่าน (Change Password)
+### ========================================
+POST {{baseUrl}}/auth/change-password
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "password123",
+  "newPassword": "newPassword456"
+}
+
+### ========================================
+### 6. ขอรีเซ็ตรหัสผ่าน (Forgot Password)
+### ========================================
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "test@example.com"
+}
+
+### ========================================
+### 7. รีเซ็ตรหัสผ่าน (Reset Password)
+### ========================================
+### เปลี่ยน YOUR_RESET_TOKEN เป็น Token ที่ได้รับทางอีเมล
+@resetToken = YOUR_RESET_TOKEN_HERE
+
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "{{resetToken}}",
+  "newPassword": "newPassword789"
+}
+
+### ========================================
+### 8. ต่ออายุ Token (Refresh Token)
+### ========================================
+### เปลี่ยน YOUR_REFRESH_TOKEN เป็น Refresh Token ที่ได้จาก Login
+@refreshToken = YOUR_REFRESH_TOKEN_HERE
+
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### ========================================
+### 9. ออกจากระบบ (Logout)
+### ========================================
+POST {{baseUrl}}/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
