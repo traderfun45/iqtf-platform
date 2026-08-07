@@ -554,3 +554,53 @@ const getVolatility = (symbol: string): number => {
   }
   return vols[symbol] || 1
 }
+
+// ========================================
+// Helper: ราคาปัจจุบัน (รองรับทุก Asset)
+// ========================================
+const getCurrentPrice = (symbol: string): number => {
+  const prices: Record<string, number> = {
+    // ===== CRYPTO =====
+    'BTCUSDT': 65000 + (Math.random() - 0.5) * 100,
+    'ETHUSDT': 3500 + (Math.random() - 0.5) * 50,
+    'BNBUSDT': 600 + (Math.random() - 0.5) * 10,
+    'SOLUSDT': 180 + (Math.random() - 0.5) * 5,
+    'ADAUSDT': 0.6 + (Math.random() - 0.5) * 0.02,
+    'XRPUSDT': 0.5 + (Math.random() - 0.5) * 0.02,
+    'DOTUSDT': 7 + (Math.random() - 0.5) * 0.3,
+    'AVAXUSDT': 40 + (Math.random() - 0.5) * 2,
+    'MATICUSDT': 0.8 + (Math.random() - 0.5) * 0.05,
+    'LINKUSDT': 15 + (Math.random() - 0.5) * 1,
+
+    // ===== GOLD & SILVER =====
+    'XAUUSD': 2400 + (Math.random() - 0.5) * 20,
+    'GC': 2410 + (Math.random() - 0.5) * 20,
+    'XAGUSD': 28 + (Math.random() - 0.5) * 1,
+    'SI': 28.5 + (Math.random() - 0.5) * 1,
+
+    // ===== FOREX =====
+    'EURUSD': 1.08 + (Math.random() - 0.5) * 0.005,
+    'GBPUSD': 1.27 + (Math.random() - 0.5) * 0.006,
+    'USDJPY': 150 + (Math.random() - 0.5) * 0.5,
+    'USDCHF': 0.88 + (Math.random() - 0.5) * 0.004,
+    'AUDUSD': 0.65 + (Math.random() - 0.5) * 0.005,
+    'USDCAD': 1.37 + (Math.random() - 0.5) * 0.005,
+    'NZDUSD': 0.60 + (Math.random() - 0.5) * 0.006,
+
+    // ===== COMMODITIES =====
+    'CL': 75 + (Math.random() - 0.5) * 2,
+    'NG': 3.5 + (Math.random() - 0.5) * 0.2,
+    'HG': 4.2 + (Math.random() - 0.5) * 0.1,
+    'ZC': 450 + (Math.random() - 0.5) * 10,
+    'ZS': 1200 + (Math.random() - 0.5) * 20,
+
+    // ===== INDICES =====
+    'SPX': 5500 + (Math.random() - 0.5) * 50,
+    'NDX': 19000 + (Math.random() - 0.5) * 100,
+    'DJI': 40000 + (Math.random() - 0.5) * 200,
+    'FTSE': 8000 + (Math.random() - 0.5) * 50,
+    'DAX': 18000 + (Math.random() - 0.5) * 100,
+    'HSI': 16000 + (Math.random() - 0.5) * 100,
+  }
+  return prices[symbol] || 100
+}
