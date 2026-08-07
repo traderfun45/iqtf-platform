@@ -286,3 +286,55 @@ enum StrategyStatus {
   PAUSED
   STOPPED
 }
+
+// ========================================
+// Backtest Model (บันทึกผลการทดสอบ)
+// ========================================
+model Backtest {
+  id            String    @id @default(cuid())
+  userId        String
+  strategyId    String?
+  name          String
+  symbol        String
+  startDate     DateTime
+  endDate       DateTime
+  initialCapital Float   @default(10000.0)
+  finalCapital   Float
+  totalReturn   Float
+  totalReturnPercent Float
+  totalTrades   Int
+  winRate       Float
+  avgWin        Float
+  avgLoss       Float
+  maxDrawdown   Float
+  sharpeRatio   Float
+  trades        Json      // เก็บรายการซื้อขายทั้งหมด
+  equityCurve   Json      // เก็บมูลค่าพอร์ตแต่ละวัน
+  config        Json      // เก็บ config ที่ใช้
+  createdAt     DateTime  @default(now())
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  strategy      Strategy? @relation(fields: [strategyId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@map("backtests")
+}
+
+// ========================================
+// OHLCV Data (ราคาย้อนหลัง) - เตรียมไว้
+// ========================================
+model OHLCV {
+  id            String    @id @default(cuid())
+  symbol        String
+  timeframe     String    // 1m, 5m, 15m, 1h, 4h, 1d
+  open          Float
+  high          Float
+  low           Float
+  close         Float
+  volume        Float
+  timestamp     DateTime
+
+  @@unique([symbol, timeframe, timestamp])
+  @@index([symbol, timeframe, timestamp])
+  @@map("ohlcv")
+}
