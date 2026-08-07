@@ -111,3 +111,68 @@ Content-Type: application/json
 {
   "refreshToken": "{{refreshToken}}"
 }
+
+### ========================================
+### TRADING API TESTS (เพิ่มใหม่)
+### ========================================
+
+### 1. สร้างคำสั่งซื้อ (Market Buy)
+POST {{baseUrl}}/trading/orders
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "symbol": "BTCUSDT",
+  "side": "BUY",
+  "type": "MARKET",
+  "quantity": 0.001
+}
+
+### 2. สร้างคำสั่งขาย (Market Sell)
+POST {{baseUrl}}/trading/orders
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "symbol": "BTCUSDT",
+  "side": "SELL",
+  "type": "MARKET",
+  "quantity": 0.001
+}
+
+### 3. สร้างคำสั่ง Limit Buy
+POST {{baseUrl}}/trading/orders
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "symbol": "ETHUSDT",
+  "side": "BUY",
+  "type": "LIMIT",
+  "quantity": 0.1,
+  "price": 3400
+}
+
+### 4. ดูคำสั่งซื้อขายทั้งหมด
+GET {{baseUrl}}/trading/orders
+Authorization: Bearer {{accessToken}}
+
+### 5. ดูคำสั่งซื้อขายที่ยังไม่เสร็จ
+GET {{baseUrl}}/trading/orders?status=OPEN
+Authorization: Bearer {{accessToken}}
+
+### 6. ยกเลิกคำสั่งซื้อขาย (เปลี่ยน YOUR_ORDER_ID)
+DELETE {{baseUrl}}/trading/orders/YOUR_ORDER_ID
+Authorization: Bearer {{accessToken}}
+
+### 7. ดูพอร์ตโฟลิโอ
+GET {{baseUrl}}/trading/portfolio
+Authorization: Bearer {{accessToken}}
+
+### 8. ดูประวัติการซื้อขาย
+GET {{baseUrl}}/trading/history
+Authorization: Bearer {{accessToken}}
+
+### 9. ดูประวัติการซื้อขายเฉพาะ BTC
+GET {{baseUrl}}/trading/history?symbol=BTCUSDT
+Authorization: Bearer {{accessToken}}
