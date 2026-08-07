@@ -39,3 +39,12 @@
     "vitest": "^1.0.0"
   }
 }
+
+{
+  "scripts": {
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}
