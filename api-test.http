@@ -258,3 +258,66 @@ Authorization: Bearer {{accessToken}}
 ### 9. ดูประวัติการซื้อขายเฉพาะ BTC
 GET {{baseUrl}}/trading/history?symbol=BTCUSDT
 Authorization: Bearer {{accessToken}}
+### ========================================
+### BACKTEST API TESTS (เพิ่มใหม่)
+### ========================================
+
+### 1. เรียกใช้ Backtest (แบบกำหนดเอง)
+POST {{baseUrl}}/backtest/run
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "symbol": "BTCUSDT",
+  "startDate": "2026-01-01T00:00:00Z",
+  "endDate": "2026-08-01T00:00:00Z",
+  "initialCapital": 10000,
+  "timeframe": "1h",
+  "strategyConfig": {
+    "fastMA": 10,
+    "slowMA": 30
+  }
+}
+
+### 2. เรียกใช้ Backtest (ใช้ Strategy ที่มี)
+POST {{baseUrl}}/backtest/run
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "strategyId": "YOUR_STRATEGY_ID",
+  "symbol": "ETHUSDT",
+  "startDate": "2026-01-01T00:00:00Z",
+  "endDate": "2026-08-01T00:00:00Z",
+  "initialCapital": 10000
+}
+
+### 3. เรียกใช้ Backtest (RSI Strategy)
+POST {{baseUrl}}/backtest/run
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "symbol": "SOLUSDT",
+  "startDate": "2026-01-01T00:00:00Z",
+  "endDate": "2026-08-01T00:00:00Z",
+  "initialCapital": 10000,
+  "strategyConfig": {
+    "period": 14,
+    "oversold": 30,
+    "overbought": 70
+  }
+}
+
+### 4. ดูประวัติ Backtest
+GET {{baseUrl}}/backtest/history
+Authorization: Bearer {{accessToken}}
+
+### 5. ดูประวัติ Backtest เฉพาะ BTC
+GET {{baseUrl}}/backtest/history?symbol=BTCUSDT
+Authorization: Bearer {{accessToken}}
+
+### 6. ดู Backtest เดียว (เปลี่ยน YOUR_BACKTEST_ID)
+GET {{baseUrl}}/backtest/YOUR_BACKTEST_ID
+Authorization: Bearer {{accessToken}}
+
