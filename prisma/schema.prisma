@@ -24,68 +24,109 @@ model User {
 
   // Relationships
   trades        Trade[]
+  orders        Order[]
   alerts        Alert[]
   strategies    Strategy[]
   sessions      Session[]
   passwordResets PasswordReset[]
+  portfolio     Portfolio?
 
   @@map("users")
 }
 
 // ========================================
-// Session Model (สำหรับ Refresh Token)
+// Portfolio Model (พอร์ตโฟลิโอ)
 // ========================================
-model Session {
+model Portfolio {
   id            String    @id @default(cuid())
-  userId        String
-  refreshToken  String    @unique
-  userAgent     String?
-  ipAddress     String?
-  expiresAt     DateTime
-  revoked       Boolean   @default(false)
-  createdAt     DateTime  @default(now())
+  userId        String    @unique
+  balance       Float     @default(10000.0) // เงินเริ่มต้น
+  equity        Float     @default(10000.0)
+  totalPnL      Float     @default(0.0)
+  totalPnLPercent Float   @default(0.0)
   updatedAt     DateTime  @updatedAt
 
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  holdings      Holding[]
 
-  @@map("sessions")
+  @@map("portfolios")
 }
 
 // ========================================
-// Password Reset Model
+// Holding Model (การถือครอง)
 // ========================================
-model PasswordReset {
+model Holding {
+  id            String    @id @default(cuid())
+  portfolioId   String
+  symbol        String
+  quantity      Float
+  averagePrice  Float
+  currentPrice  Float?
+  value         Float?
+  pnl           Float?
+  pnlPercent    Float?
+  updatedAt     DateTime  @updatedAt
+
+  portfolio     Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@unique([portfolioId, symbol])
+  @@map("holdings")
+}
+
+// ========================================
+// Order Model (คำสั่งซื้อขาย)
+// ========================================
+model Order {
   id            String    @id @default(cuid())
   userId        String
-  token         String    @unique
-  expiresAt     DateTime
-  used          Boolean   @default(false)
+  symbol        String
+  side          OrderSide
+  type          OrderType
+  quantity      Float
+  price         Float?
+  stopPrice     Float?
+  takeProfit    Float?
+  status        OrderStatus @default(PENDING)
+  executedQty   Float     @default(0.0)
+  avgPrice      Float?
+  fee           Float     @default(0.0)
   createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  executedAt    DateTime?
 
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("password_resets")
+  @@index([userId, status])
+  @@index([symbol, createdAt])
+  @@map("orders")
 }
 
 // ========================================
-// Existing Models
+// Trade Model (บันทึกการซื้อขายที่สำเร็จ)
 // ========================================
 model Trade {
-  id        String   @id @default(cuid())
-  userId    String
-  symbol    String
-  side      Side
-  amount    Float
-  price     Float
-  status    TradeStatus @default(OPEN)
-  createdAt DateTime   @default(now())
-  closedAt  DateTime?
+  id            String    @id @default(cuid())
+  userId        String
+  orderId       String?
+  symbol        String
+  side          Side
+  quantity      Float
+  price         Float
+  fee           Float     @default(0.0)
+  pnl           Float?
+  status        TradeStatus @default(OPEN)
+  createdAt     DateTime  @default(now())
+  closedAt      DateTime?
 
-  user      User     @relation(fields: [userId], references: [id])
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, symbol])
   @@map("trades")
 }
 
+// ========================================
+// Existing Models (Strategy, Alert, Session, PasswordReset)
+// ========================================
 model Strategy {
   id          String   @id @default(cuid())
   userId      String
@@ -115,12 +156,63 @@ model Alert {
   @@map("alerts")
 }
 
+model Session {
+  id            String    @id @default(cuid())
+  userId        String
+  refreshToken  String    @unique
+  userAgent     String?
+  ipAddress     String?
+  expiresAt     DateTime
+  revoked       Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model PasswordReset {
+  id            String    @id @default(cuid())
+  userId        String
+  token         String    @unique
+  expiresAt     DateTime
+  used          Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_resets")
+}
+
 // ========================================
 // Enums
 // ========================================
 enum Role {
   USER
   ADMIN
+}
+
+enum OrderSide {
+  BUY
+  SELL
+}
+
+enum OrderType {
+  MARKET
+  LIMIT
+  STOP
+  STOP_LIMIT
+}
+
+enum OrderStatus {
+  PENDING
+  OPEN
+  PARTIALLY_FILLED
+  FILLED
+  CANCELLED
+  REJECTED
+  EXPIRED
 }
 
 enum Side {
@@ -131,5 +223,4 @@ enum Side {
 enum TradeStatus {
   OPEN
   CLOSED
-  CANCELLED
 }
