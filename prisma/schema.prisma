@@ -338,3 +338,69 @@ model OHLCV {
   @@index([symbol, timeframe, timestamp])
   @@map("ohlcv")
 }
+
+// ========================================
+// Asset Model (สินทรัพย์ทั้งหมด)
+// ========================================
+model Asset {
+  id            String    @id @default(cuid())
+  symbol        String    @unique
+  name          String
+  type          AssetType
+  exchange      String?
+  sector        String?
+  currency      String    @default("USD")
+  minQuantity   Float     @default(0.001)
+  maxQuantity   Float     @default(1000)
+  lotSize       Float     @default(0.001)
+  tickSize      Float     @default(0.01)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relationships
+  prices        AssetPrice[]
+  orders        Order[]
+  holdings      Holding[]
+  strategies    Strategy[]
+
+  @@map("assets")
+}
+
+// ========================================
+// Asset Price (ราคาสินทรัพย์)
+// ========================================
+model AssetPrice {
+  id            String    @id @default(cuid())
+  assetId       String
+  symbol        String
+  price         Float
+  bid           Float?
+  ask           Float?
+  high          Float?
+  low           Float?
+  volume        Float?
+  change        Float?
+  changePercent Float?
+  timestamp     DateTime  @default(now())
+
+  asset         Asset     @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId, timestamp])
+  @@map("asset_prices")
+}
+
+// ========================================
+// Enums (เพิ่ม)
+// ========================================
+enum AssetType {
+  CRYPTO
+  STOCK
+  FOREX
+  COMMODITY
+  INDEX
+  FUTURES
+  SPOT
+  ETF
+  BOND
+}
