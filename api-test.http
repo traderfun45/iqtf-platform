@@ -37,7 +37,7 @@ Content-Type: application/json
 ### 3. ดูโปรไฟล์ (Get Profile) - ต้องมี Token
 ### ========================================
 ### เปลี่ยน YOUR_ACCESS_TOKEN เป็น Token ที่ได้จาก Login
-@accessToken = YOUR_ACCESS_TOKEN_HERE
+@accessToken = dummy_token_for_test
 
 GET {{baseUrl}}/auth/profile
 Authorization: Bearer {{accessToken}}
@@ -79,7 +79,7 @@ Content-Type: application/json
 ### 7. รีเซ็ตรหัสผ่าน (Reset Password)
 ### ========================================
 ### เปลี่ยน YOUR_RESET_TOKEN เป็น Token ที่ได้รับทางอีเมล
-@resetToken = YOUR_RESET_TOKEN_HERE
+@resetToken = 
 
 POST {{baseUrl}}/auth/reset-password
 Content-Type: application/json
@@ -93,7 +93,7 @@ Content-Type: application/json
 ### 8. ต่ออายุ Token (Refresh Token)
 ### ========================================
 ### เปลี่ยน YOUR_REFRESH_TOKEN เป็น Refresh Token ที่ได้จาก Login
-@refreshToken = YOUR_REFRESH_TOKEN_HERE
+@refreshToken = dummy_refresh_token_for_test
 
 POST {{baseUrl}}/auth/refresh
 Content-Type: application/json
