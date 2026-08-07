@@ -321,3 +321,59 @@ Authorization: Bearer {{accessToken}}
 GET {{baseUrl}}/backtest/YOUR_BACKTEST_ID
 Authorization: Bearer {{accessToken}}
 
+### ========================================
+### ASSET API TESTS (เพิ่มใหม่)
+### ========================================
+
+### 1. ดูสินทรัพย์ทั้งหมด
+GET {{baseUrl}}/assets
+Authorization: Bearer {{accessToken}}
+
+### 2. ดูสินทรัพย์ประเภท CRYPTO
+GET {{baseUrl}}/assets?type=CRYPTO
+Authorization: Bearer {{accessToken}}
+
+### 3. ดูสินทรัพย์ประเภท FOREX
+GET {{baseUrl}}/assets?type=FOREX
+Authorization: Bearer {{accessToken}}
+
+### 4. ดูสินทรัพย์ประเภท COMMODITY
+GET {{baseUrl}}/assets?type=COMMODITY
+Authorization: Bearer {{accessToken}}
+
+### 5. ดูสินทรัพย์ประเภท FUTURES
+GET {{baseUrl}}/assets?type=FUTURES
+Authorization: Bearer {{accessToken}}
+
+### 6. ดูสินทรัพย์ประเภท SPOT
+GET {{baseUrl}}/assets?type=SPOT
+Authorization: Bearer {{accessToken}}
+
+### 7. ดูสินทรัพย์ประเภท INDEX
+GET {{baseUrl}}/assets?type=INDEX
+Authorization: Bearer {{accessToken}}
+
+### 8. ค้นหาสินทรัพย์
+GET {{baseUrl}}/assets?search=GOLD
+Authorization: Bearer {{accessToken}}
+
+### 9. ดู Asset เดียว (XAUUSD)
+GET {{baseUrl}}/assets/XAUUSD
+Authorization: Bearer {{accessToken}}
+
+### 10. ดู Asset เดียว (GC)
+GET {{baseUrl}}/assets/GC
+Authorization: Bearer {{accessToken}}
+
+### 11. ดู Asset เดียว (EURUSD)
+GET {{baseUrl}}/assets/EURUSD
+Authorization: Bearer {{accessToken}}
+
+### 12. ดูราคาสินทรัพย์ (Real-time)
+GET {{baseUrl}}/assets/XAUUSD/price
+Authorization: Bearer {{accessToken}}
+
+### 13. ดูราคาสินทรัพย์ (GC)
+GET {{baseUrl}}/assets/GC/price
+Authorization: Bearer {{accessToken}}
+
