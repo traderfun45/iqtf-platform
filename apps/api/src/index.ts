@@ -113,3 +113,12 @@ const start = async () => {
 }
 
 start()
+import { dashboardRoutes } from './routes/dashboard.routes'
+
+// ... ในส่วน routes
+app.register(authRoutes, { prefix: '/api' })
+app.register(tradingRoutes, { prefix: '/api' })
+app.register(strategyRoutes, { prefix: '/api' })
+app.register(backtestRoutes, { prefix: '/api' })
+app.register(assetRoutes, { prefix: '/api' })
+app.register(dashboardRoutes, { prefix: '/api' }) // ✅ เพิ่มบรรทัดนี้
