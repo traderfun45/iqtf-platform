@@ -8,9 +8,6 @@
     "build": "tsup src/index.ts --format esm --dts --clean",
     "dev": "tsup src/index.ts --format esm --dts --watch"
   },
-  "dependencies": {
-    "@iqtf/shared": "workspace:*"
-  },
   "devDependencies": {
     "tsup": "^7.0.0",
     "typescript": "^5.0.0"
