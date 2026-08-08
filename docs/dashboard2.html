@@ -1,0 +1,244 @@
+// ========================================
+// MOCK DATA (ใช้ข้อมูลจำลอง)
+// ========================================
+function getMockData() {
+  return {
+    summary: {
+      totalPnL: 12450.75,
+      totalPnLPercent: 24.5,
+      totalEquity: 22450.75,
+      winRate: 68.5,
+      totalTrades: 42,
+      sharpeRatio: 1.85,
+      maxDrawdown: -3250.00,
+      holdings: [
+        { symbol: 'BTCUSDT', quantity: 0.05, averagePrice: 65000, currentPrice: 68200, pnl: 160, pnlPercent: 4.9 },
+        { symbol: 'ETHUSDT', quantity: 1.2, averagePrice: 3500, currentPrice: 3720, pnl: 264, pnlPercent: 6.3 },
+        { symbol: 'XAUUSD', quantity: 0.5, averagePrice: 2400, currentPrice: 2450, pnl: 25, pnlPercent: 2.1 },
+        { symbol: 'EURUSD', quantity: 10000, averagePrice: 1.08, currentPrice: 1.09, pnl: 100, pnlPercent: 0.9 },
+      ],
+      recentTrades: [
+        { symbol: 'BTCUSDT', side: 'BUY', quantity: 0.02, price: 67500, pnl: 140, createdAt: new Date(Date.now() - 3600000).toISOString() },
+        { symbol: 'ETHUSDT', side: 'SELL', quantity: 0.5, price: 3700, pnl: 95, createdAt: new Date(Date.now() - 7200000).toISOString() },
+        { symbol: 'XAUUSD', side: 'BUY', quantity: 0.2, price: 2430, pnl: 12, createdAt: new Date(Date.now() - 14400000).toISOString() },
+        { symbol: 'BTCUSDT', side: 'SELL', quantity: 0.01, price: 68000, pnl: 75, createdAt: new Date(Date.now() - 86400000).toISOString() },
+        { symbol: 'EURUSD', side: 'BUY', quantity: 5000, price: 1.085, pnl: 25, createdAt: new Date(Date.now() - 172800000).toISOString() },
+      ]
+    },
+    equity: Array.from({ length: 30 }, (_, i) => ({
+      date: new Date(Date.now() - (29 - i) * 86400000).toISOString(),
+      equity: 18000 + Math.random() * 6000
+    })),
+    performance: {
+      totalPnL: 12450.75,
+      winRate: 68.5,
+      profitFactor: 2.1,
+      avgWin: 420.50,
+      avgLoss: -215.30,
+      maxWin: 1250.00,
+      maxLoss: -850.00,
+      totalTrades: 42,
+    }
+  };
+}
+
+// ========================================
+// โหลด Dashboard (ใช้ Mock Data)
+// ========================================
+function loadDashboard() {
+  try {
+    const mock = getMockData();
+    const summary = mock.summary;
+    const equityData = mock.equity;
+    const perf = mock.performance;
+
+    // แสดงผล
+    renderSummary(summary);
+    renderEquityChart(equityData);
+    renderHoldings(summary.holdings || []);
+    renderPerformance(perf);
+    renderTrades(summary.recentTrades || []);
+
+    // ซ่อน loading
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+    document.getElementById('statusDot').className = 'status-dot online';
+    document.getElementById('statusText').textContent = 'Online (Mock)';
+
+  } catch (error) {
+    console.error('Dashboard error:', error);
+    document.getElementById('loading').innerHTML = `
+      <i class="fas fa-exclamation-triangle" style="color:#ef5350;"></i>
+      <p style="color:#ef5350;">Error loading dashboard</p>
+      <p style="font-size:0.8rem; color:#666;">${error.message}</p>
+      <button onclick="location.reload()" style="margin-top:12px; padding:8px 24px; background:#4fc3f7; color:#000; border:none; border-radius:8px; cursor:pointer;">
+        Retry
+      </button>
+    `;
+  }
+}
+
+// ========================================
+// ฟังก์ชัน RENDER (เหมือนเดิม)
+// ========================================
+function renderSummary(summary) {
+  const pnl = summary.totalPnL || 0;
+  const pnlPercent = summary.totalPnLPercent || 0;
+  
+  document.getElementById('totalPnL').innerHTML = `
+    ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} 
+    <span style="font-size:0.8rem; color:${pnl >= 0 ? '#81c784' : '#ef5350'};">
+      (${pnlPercent >= 0 ? '+' : ''}${pnlPercent.toFixed(2)}%)
+    </span>
+  `;
+  document.getElementById('totalPnL').className = `value ${pnl >= 0 ? 'positive' : 'negative'}`;
+  
+  document.getElementById('totalEquity').textContent = `$${(summary.totalEquity || 0).toFixed(2)}`;
+  document.getElementById('totalEquity').className = 'value neutral';
+  
+  document.getElementById('winRate').textContent = `${(summary.winRate || 0).toFixed(1)}%`;
+  document.getElementById('winRate').className = 'value neutral';
+  
+  document.getElementById('totalTrades').textContent = summary.totalTrades || 0;
+  document.getElementById('totalTrades').className = 'value neutral';
+  
+  document.getElementById('sharpeRatio').textContent = (summary.sharpeRatio || 0).toFixed(2);
+  document.getElementById('sharpeRatio').className = 'value neutral';
+  
+  document.getElementById('maxDrawdown').textContent = `$${(summary.maxDrawdown || 0).toFixed(2)}`;
+  document.getElementById('maxDrawdown').className = 'value negative';
+}
+
+let chartInstance = null;
+
+function renderEquityChart(data) {
+  const ctx = document.getElementById('equityChart').getContext('2d');
+  
+  const labels = data.map(d => new Date(d.date).toLocaleDateString());
+  const values = data.map(d => d.equity);
+  
+  if (chartInstance) chartInstance.destroy();
+  
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Portfolio Equity (Mock)',
+        data: values,
+        borderColor: '#4fc3f7',
+        backgroundColor: 'rgba(79, 195, 247, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { labels: { color: '#aaa', font: { size: 12 } } }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', maxTicksLimit: 15 } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }
+      }
+    }
+  });
+}
+
+function renderHoldings(holdings) {
+  const container = document.getElementById('holdingsContainer');
+  if (!holdings || holdings.length === 0) {
+    container.innerHTML = '<p style="color:#666; font-size:0.9rem;">No holdings yet</p>';
+    return;
+  }
+  
+  let html = `<table><thead><tr>
+    <th>Symbol</th><th>Qty</th><th>Avg Price</th><th>Current</th><th>P&L</th>
+  </tr></thead><tbody>`;
+  
+  holdings.forEach(h => {
+    const pnl = h.pnl || 0;
+    html += `
+      <tr>
+        <td><strong>${h.symbol}</strong></td>
+        <td>${h.quantity.toFixed(4)}</td>
+        <td>$${h.averagePrice.toFixed(2)}</td>
+        <td>$${(h.currentPrice || h.averagePrice).toFixed(2)}</td>
+        <td style="color:${pnl >= 0 ? '#81c784' : '#ef5350'};">
+          ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}
+        </td>
+      </tr>
+    `;
+  });
+  
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+function renderPerformance(perf) {
+  const container = document.getElementById('performanceContainer');
+  const metrics = [
+    { label: 'Total P&L', value: `$${(perf.totalPnL || 0).toFixed(2)}` },
+    { label: 'Win Rate', value: `${(perf.winRate || 0).toFixed(1)}%` },
+    { label: 'Profit Factor', value: (perf.profitFactor || 0).toFixed(2) },
+    { label: 'Avg Win', value: `$${(perf.avgWin || 0).toFixed(2)}` },
+    { label: 'Avg Loss', value: `$${(perf.avgLoss || 0).toFixed(2)}` },
+    { label: 'Max Win', value: `$${(perf.maxWin || 0).toFixed(2)}` },
+    { label: 'Max Loss', value: `$${(perf.maxLoss || 0).toFixed(2)}` },
+    { label: 'Total Trades', value: perf.totalTrades || 0 },
+  ];
+  
+  if (perf.totalTrades === 0) {
+    container.innerHTML = '<p style="color:#666; font-size:0.9rem;">No trades yet</p>';
+    return;
+  }
+  
+  let html = `<table><tbody>`;
+  metrics.forEach(m => {
+    html += `<tr>
+      <td style="color:#888; padding:6px 12px;">${m.label}</td>
+      <td style="padding:6px 12px; font-weight:600; text-align:right;">${m.value}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+function renderTrades(trades) {
+  const container = document.getElementById('tradesContainer');
+  if (!trades || trades.length === 0) {
+    container.innerHTML = '<p style="color:#666; font-size:0.9rem;">No trades yet</p>';
+    return;
+  }
+  
+  let html = `<table><thead><tr>
+    <th>Time</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th><th>P&L</th>
+  </tr></thead><tbody>`;
+  
+  trades.forEach(t => {
+    const pnl = t.pnl || 0;
+    const time = new Date(t.createdAt).toLocaleString();
+    html += `
+      <tr>
+        <td style="color:#888; font-size:0.8rem;">${time}</td>
+        <td><strong>${t.symbol}</strong></td>
+        <td class="side-${t.side.toLowerCase()}">${t.side}</td>
+        <td>${t.quantity.toFixed(4)}</td>
+        <td>$${t.price.toFixed(2)}</td>
+        <td style="color:${pnl >= 0 ? '#81c784' : '#ef5350'};">
+          ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}
+        </td>
+      </tr>
+    `;
+  });
+  
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+// ========================================
+// START
+// ========================================
+document.addEventListener('DOMContentLoaded', loadDashboard);
