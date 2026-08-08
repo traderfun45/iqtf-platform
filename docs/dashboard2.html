@@ -1,4 +1,4 @@
-
+บู๊
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -566,6 +566,44 @@
     // ========================================
     document.addEventListener('DOMContentLoaded', loadDashboard);
   </script>
+
+
+<!-- ในส่วน header -->
+<div style="display:flex; align-items:center; gap:12px;">
+  <span class="badge"><i class="fas fa-code"></i> v1.0.0</span>
+  <span class="status">
+    <span class="status-dot online" id="statusDot"></span>
+    <span id="statusText">Online</span>
+  </span>
+  <button onclick="login()" style="background:#4fc3f7; color:#000; border:none; padding:6px 16px; border-radius:20px; cursor:pointer; font-weight:600;">
+    Login
+  </button>
+  <a href="/iqtf-platform/" style="color:#4fc3f7; text-decoration:none; font-size:0.9rem;">
+    <i class="fas fa-arrow-left"></i> Back
+  </a>
+</div>
+
+function login() {
+  const email = prompt('Enter email:');
+  const password = prompt('Enter password:');
+  
+  fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      ACCESS_TOKEN = data.data.accessToken;
+      alert('Login successful!');
+      loadDashboard();
+    } else {
+      alert('Login failed: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error: ' + err.message));
+}
 
 </body>
 </html>
