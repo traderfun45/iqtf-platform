@@ -377,3 +377,19 @@ Authorization: Bearer {{accessToken}}
 GET {{baseUrl}}/assets/GC/price
 Authorization: Bearer {{accessToken}}
 
+### ========================================
+### DASHBOARD API TESTS
+### ========================================
+
+### 1. ดู Dashboard Summary
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{accessToken}}
+
+### 2. ดู Equity Curve (30 วัน)
+GET {{baseUrl}}/dashboard/equity?days=30
+Authorization: Bearer {{accessToken}}
+
+### 3. ดู Performance Metrics
+GET {{baseUrl}}/dashboard/performance
+Authorization: Bearer {{accessToken}}
+
